@@ -4,7 +4,6 @@ namespace MichaelNabil230\BlockIp;
 
 use Illuminate\Notifications\ChannelManager;
 use Illuminate\Support\Facades\Notification;
-use MichaelNabil230\BlockIp\Commands\UnlockCommand;
 use MichaelNabil230\BlockIp\Notifications\Channels\Discord\DiscordChannel;
 use MichaelNabil230\BlockIp\Notifications\EventHandler;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
@@ -27,7 +26,10 @@ class BlockIpServiceProvider extends PackageServiceProvider
                     ->askToRunMigrations()
                     ->askToStarRepoOnGitHub('michaelnabil230/laravel-block-ip');
             })
-            ->hasCommand(UnlockCommand::class);
+            ->hasCommands([
+                Commands\AddIpsCommand::class,
+                Commands\UnlockCommand::class,
+            ]);
     }
 
     public function packageRegistered()

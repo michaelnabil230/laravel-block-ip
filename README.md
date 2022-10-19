@@ -139,10 +139,16 @@ Route::middleware(['block_ip'])->group(function () {
 });
 ```
 
-If you want to unlock all blocks for Ips can make that when running this command:
+If you want to unlock all blocks for IPs can make that when running this command:
 
 ```bash
 php artisan block-ip:unlock
+```
+
+If you want to add new IPs for the block can make that when running this command:
+
+```bash
+php artisan block-ip:add-ips 127.0.0.1,127.0.0.2
 ```
 
 ## Support

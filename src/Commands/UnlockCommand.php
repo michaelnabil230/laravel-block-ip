@@ -4,7 +4,9 @@ namespace MichaelNabil230\BlockIp\Commands;
 
 use Illuminate\Console\Command;
 use MichaelNabil230\BlockIp\Models\BlockIp;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'block-ip:unlock')]
 class UnlockCommand extends Command
 {
     /**
