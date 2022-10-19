@@ -2,9 +2,9 @@
 
 namespace MichaelNabil230\BlockIp;
 
+use MichaelNabil230\BlockIp\Commands\BlockIpCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use MichaelNabil230\BlockIp\Commands\BlockIpCommand;
 
 class BlockIpServiceProvider extends PackageServiceProvider
 {

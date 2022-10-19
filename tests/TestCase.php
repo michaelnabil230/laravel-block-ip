@@ -3,8 +3,8 @@
 namespace MichaelNabil230\BlockIp\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use MichaelNabil230\BlockIp\BlockIpServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
