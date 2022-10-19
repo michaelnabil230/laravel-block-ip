@@ -17,7 +17,7 @@ class BlockIpMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        abort_if(in_array($request->ip(), BlockIp::pluck('ip_address')), 403, 'You are restricted to access the site.');
+        abort_if(BlockIp::where('ip_address', $request->ip())->exists(), 403, 'You are restricted to access the site.');
 
         return $next($request);
     }
