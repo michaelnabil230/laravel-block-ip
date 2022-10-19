@@ -61,10 +61,7 @@
         "laravel": {
             "providers": [
                 "MichaelNabil230\\BlockIp\\BlockIpServiceProvider"
-            ],
-            "aliases": {
-                "BlockIp": "MichaelNabil230\\BlockIp\\Facades\\BlockIp"
-            }
+            ]
         }
     },
     "minimum-stability": "dev",
