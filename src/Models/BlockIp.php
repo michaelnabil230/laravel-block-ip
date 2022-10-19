@@ -20,6 +20,7 @@ class BlockIp extends Model
         'ip_address',
         'authenticatable_type',
         'authenticatable_id',
+        'cloudflare_id',
     ];
 
     /**
@@ -30,8 +31,9 @@ class BlockIp extends Model
      * @var array
      */
     protected $dispatchesEvents = [
-        'saved' => Events\BlockIpSaved::class,
         'created' => Events\BlockIpCreated::class,
+        'deleting' => Events\DeletingBlockIp::class,
+        'deleted' => Events\BlockIpDeleted::class,
     ];
 
     /**

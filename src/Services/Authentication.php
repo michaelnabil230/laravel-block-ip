@@ -9,7 +9,7 @@ class Authentication
 {
     public static function getUser(): Authenticatable|null
     {
-        $defaultGuards = config('auth.guards');
+        $defaultGuards = array_keys(config('auth.guards'));
 
         $guards = empty($defaultGuards) ? [null] : $defaultGuards;
 

@@ -4,7 +4,7 @@ namespace MichaelNabil230\BlockIp\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use MichaelNabil230\BlockIp\Models\BlockIp;
+use MichaelNabil230\BlockIp\BlockIpRegistrar;
 
 class BlockIpMiddleware
 {
@@ -17,7 +17,9 @@ class BlockIpMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        abort_if(BlockIp::where('ip_address', $request->ip())->exists(), 403, 'You are restricted to access the site.');
+        $ip = $request->ip();
+
+        abort_if(app(BlockIpRegistrar::class)->getBlockIpCached($ip), 403, 'You are restricted to access the site.');
 
         return $next($request);
     }

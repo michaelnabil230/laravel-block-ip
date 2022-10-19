@@ -7,15 +7,15 @@ use Illuminate\Support\Arr;
 use MichaelNabil230\BlockIp\Models\BlockIp;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'block-ip:add-ips')]
-class AddIpsCommand extends Command
+#[AsCommand(name: 'block-ip:block')]
+class BlockCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'block-ip:add-ips {ips= : Insert new IPs in the database}';
+    protected $signature = 'block-ip:block {ips= : Insert new IPs in the database}';
 
     /**
      * The console command description.

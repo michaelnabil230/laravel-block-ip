@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('block_ips', function (Blueprint $table) {
             $table->id();
+            $table->string('cloudflare_id')->nullable();
             $table->ipAddress()->unique();
             $table->nullableMorphs('authenticatable');
             $table->timestamps();

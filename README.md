@@ -42,6 +42,7 @@ return [
     /*
      * Truest ips for you
      */
+
     'truest_ips' => [
         '127.0.0.1',
     ],
@@ -49,20 +50,18 @@ return [
     /*
      * You can get notified when specific events occur. Out of the box you can use 'mail' and 'slack'.
      * For Slack you need to install laravel/slack-notification-channel.
-     *
-     * You can also use your own notification classes, just make sure the class is named after one of
-     * the `MichaelNabil230\BlockIp\Notifications\Notifications` classes.
+     * 
      */
+
     'notifications' => [
 
-        'notifications' => [
-            \MichaelNabil230\BlockIp\Notifications\Notifications\BlockIpNotification::class => ['mail'],
-        ],
+        'channels' => ['mail'],
 
         /*
          * Here you can specify the notifiable to which the notifications should be sent. The default
          * notifiable will use the variables specified in this config file.
          */
+
         'notifiable' => \MichaelNabil230\BlockIp\Notifications\Notifiable::class,
 
         'mail' => [
@@ -80,6 +79,7 @@ return [
             /*
              * If this is set to null the default channel of the webhook will be used.
              */
+
             'channel' => null,
 
             'username' => null,
@@ -94,13 +94,57 @@ return [
             /*
              * If this is an empty string, the name field on the webhook will be used.
              */
+
             'username' => '',
 
             /*
              * If this is an empty string, the avatar on the webhook will be used.
              */
+
             'avatar_url' => '',
         ],
+    ],
+
+    'cache' => [
+
+        /*
+         * By default all block ips are cached for 24 hours to speed up performance.
+         * When block ips are updated the cache is flushed automatically.
+         */
+
+        'expiration_time' => \DateInterval::createFromDateString('24 hours'),
+
+        /*
+         * The cache key used to store all block ips.
+         */
+
+        'key' => 'block-ips.cache.',
+
+        /*
+         * You may optionally indicate a specific cache driver to use for block ip
+         * caching using any of the `store` drivers listed in the cache.php config
+         * file. Using 'default' here means to use the `default` set in cache.php.
+         */
+
+        'store' => 'default',
+    ],
+
+    'webhook_cloud_flare' => [
+
+        /**
+         * Enable the webhook cloud flare work when user blocked.
+         */
+        'enable' => false,
+
+        /**
+         * Global API Key on the "My Profile > Api Tokens > API Keys" page.
+         */
+        'key' => env('CLOUDFLARE_KEY'),
+
+        /**
+         * Email address associated with your account.
+         */
+        'email' => env('CLOUDFLARE_EMAIL'),
     ],
 ];
 ```
@@ -116,8 +160,14 @@ protected function configureRateLimiting()
         return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
     });
 
-    \MichaelNabil230\BlockIp\BlockIp::rateLimiter();
+    \MichaelNabil230\BlockIp\BlockIpRegistrar::rateLimiter();
 }
+```
+
+By default `maxAttempts` is `60` but if you want to change this number can make that.
+
+```php
+\MichaelNabil230\BlockIp\BlockIpRegistrar::rateLimiter(100);
 ```
 
 ## Package Middleware
@@ -127,28 +177,43 @@ This package comes with `BlockIpMiddleware` middleware. You can add them inside 
 ```php
 protected $routeMiddleware = [
     // ...
-    'block_ip' => \MichaelNabil230\BlockIp\Middlewares\BlockIpMiddleware::class,
+    'block-ip' => \MichaelNabil230\BlockIp\Middleware\BlockIpMiddleware::class,
+];
+```
+
+Check if this line is uncommented in your `app/Http/Kernel.php` file.
+
+```php
+protected $routeMiddleware = [
+    // ...
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 ];
 ```
 
 Then you can protect your routes using middleware rules:
 
 ```php
-Route::middleware(['block_ip'])->group(function () {
+Route::middleware(['block-ip', 'throttle:block-ip'])->group(function () {
     //
 });
 ```
 
-If you want to unlock all blocks for IPs can make that when running this command:
+If you want to unblock all blocks for IPs can make that when running this command:
 
 ```bash
-php artisan block-ip:unlock
+php artisan block-ip:unblock --all
+```
+
+Or pluck for IPs
+
+```bash
+php artisan block-ip:unblock --ips=127.0.0.1,127.0.0.2
 ```
 
 If you want to add new IPs for the block can make that when running this command:
 
 ```bash
-php artisan block-ip:add-ips 127.0.0.1,127.0.0.2
+php artisan block-ip:block 127.0.0.1,127.0.0.2
 ```
 
 ## Support

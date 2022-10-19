@@ -5,14 +5,14 @@ namespace MichaelNabil230\BlockIp\Notifications\Notifications;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
+use MichaelNabil230\BlockIp\Events\BlockIpCreated;
 use MichaelNabil230\BlockIp\Notifications\BaseNotification;
 use MichaelNabil230\BlockIp\Notifications\Channels\Discord\DiscordMessage;
 
 class BlockIpNotification extends BaseNotification
 {
-    public function __construct(
-        public $event,
-    ) {
+    public function __construct(public BlockIpCreated $event)
+    {
     }
 
     public function toMail(): MailMessage
@@ -22,8 +22,10 @@ class BlockIpNotification extends BaseNotification
             ->subject(trans('block-ip::notifications.has_the_new_ip_been_blocked', ['application_name' => $this->applicationName()]))
             ->line(trans('block-ip::notifications.has_the_new_ip_been_blocked', ['application_name' => $this->applicationName()]));
 
-        $this->backupDestinationProperties()->each(function ($value, $name) use ($mailMessage) {
-            $mailMessage->line("{$name}: $value");
+        $this->blockIpDestinationProperties()->each(function ($value, $name) use ($mailMessage) {
+            if (!is_null($value)) {
+                $mailMessage->line("{$name}: $value");
+            }
         });
 
         return $mailMessage;
@@ -37,7 +39,7 @@ class BlockIpNotification extends BaseNotification
             ->to(config('block-ip.notifications.slack.channel'))
             ->content(trans('block-ip::notifications.has_the_new_ip_been_blocked'))
             ->attachment(function (SlackAttachment $attachment) {
-                $attachment->fields($this->backupDestinationProperties()->toArray());
+                $attachment->fields($this->blockIpDestinationProperties()->toArray());
             });
     }
 
@@ -47,6 +49,6 @@ class BlockIpNotification extends BaseNotification
             ->success()
             ->from(config('block-ip.notifications.discord.username'), config('block-ip.notifications.discord.avatar_url'))
             ->title(trans('block-ip::notifications.has_the_new_ip_been_blocked'))
-            ->fields($this->backupDestinationProperties()->toArray());
+            ->fields($this->blockIpDestinationProperties()->toArray());
     }
 }
