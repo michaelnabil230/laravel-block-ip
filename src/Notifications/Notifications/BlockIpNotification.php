@@ -23,7 +23,7 @@ class BlockIpNotification extends BaseNotification
             ->line(trans('block-ip::notifications.has_the_new_ip_been_blocked', ['application_name' => $this->applicationName()]));
 
         $this->blockIpDestinationProperties()->each(function ($value, $name) use ($mailMessage) {
-            if (!is_null($value)) {
+            if (! is_null($value)) {
                 $mailMessage->line("{$name}: $value");
             }
         });

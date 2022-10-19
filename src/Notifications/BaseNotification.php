@@ -37,7 +37,7 @@ abstract class BaseNotification extends Notification
         return collect([
             $applicationName => $this->applicationName(),
             $ip => $blockIp->ip_address,
-            $blockedInCloudFlare => !is_null($blockIp->cloudflare_id),
+            $blockedInCloudFlare => ! is_null($blockIp->cloudflare_id),
             $id => $blockIp->user?->id,
             $name => $blockIp->user?->name,
             $email => $blockIp->user?->email,
