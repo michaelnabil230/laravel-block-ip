@@ -26,8 +26,6 @@ class BlockCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -36,8 +34,6 @@ class BlockCommand extends Command
 
     /**
      * Insert IPs into the database.
-     *
-     * @return int
      */
     private function insert(): int
     {

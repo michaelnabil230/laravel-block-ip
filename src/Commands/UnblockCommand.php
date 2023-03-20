@@ -28,8 +28,6 @@ class UnblockCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return void
      */
     public function handle(): void
     {
@@ -48,8 +46,6 @@ class UnblockCommand extends Command
 
     /**
      * Unblock all of the entries older than the given date.
-     *
-     * @return int
      */
     public function unblockAll(): int
     {
@@ -64,8 +60,6 @@ class UnblockCommand extends Command
 
     /**
      * Unblock IPs into the database.
-     *
-     * @return int
      */
     private function unblockIps(): int
     {
