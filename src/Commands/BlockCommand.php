@@ -15,7 +15,7 @@ class BlockCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'block-ip:block {ips= : Insert new IPs in the database}';
+    protected $signature = 'block-ip:block {ips* : Insert new IPs in the database}';
 
     /**
      * The console command description.
@@ -37,11 +37,13 @@ class BlockCommand extends Command
      */
     private function insert(): int
     {
-        $newIps = Arr::wrap(explode(',', $this->argument('ips')));
+        $newIps = $this->argument('ips');
         $oldIps = BlockIp::pluck('ip_address')->toArray();
 
-        BlockIp::insert(array_diff($newIps, $oldIps));
+        $ips = array_diff($newIps, $oldIps);
 
-        return count(array_diff($newIps, $oldIps));
+        BlockIp::insert(Arr::map($ips, fn ($ip) => ['ip_address' => $ip]));
+
+        return count($ips);
     }
 }

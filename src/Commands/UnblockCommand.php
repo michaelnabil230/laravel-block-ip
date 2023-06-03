@@ -17,7 +17,7 @@ class UnblockCommand extends Command
      */
     protected $signature = 'block-ip:unblock 
                                         {--all : Unblock all Ips from database}
-                                        {--ips : Unblock IPs in the database}';
+                                        {--ips=* : Unblock IPs in the database}';
 
     /**
      * The console command description.

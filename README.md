@@ -1,157 +1,45 @@
-# This package is for controlling everything related to website visits using the Laravel framework
+# Laravel Block IP Package
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/michaelnabil230/laravel-block-ip.svg?style=flat-square)](https://packagist.org/packages/michaelnabil230/laravel-block-ip)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/michaelnabil230/laravel-block-ip/run-tests?label=tests)](https://github.com/michaelnabil230/laravel-block-ip/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/michaelnabil230/laravel-block-ip/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/michaelnabil230/laravel-block-ip/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/michaelnabil230/laravel-block-ip.svg?style=flat-square)](https://packagist.org/packages/michaelnabil230/laravel-block-ip)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+The Laravel Block IP package provides a convenient way to control everything related to website visits using the Laravel framework. It allows you to block specific IP addresses, configure rate limiting, and receive notifications for certain events.
 
 ## Installation
 
-You can install the package via composer:
+You can install the package via Composer by running the following command:
 
 ```bash
 composer require michaelnabil230/laravel-block-ip
 ```
 
-You can publish all files and run the migrations with:
+After installing the package, you need to publish the package files and run the migrations:
 
 ```bash
 php artisan block-ip:install
 php artisan migrate
 ```
 
-You can publish and run the migrations with:
+To publish and run the migrations separately, you can use the following commands:
 
 ```bash
 php artisan vendor:publish --tag="laravel-block-ip-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
+You can also publish the package's configuration file using the following command:
 
 ```bash
 php artisan vendor:publish --tag="laravel-block-ip-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-    /*
-     * Truest ips for you
-     */
-
-    'truest_ips' => [
-        '127.0.0.1',
-    ],
-
-    /*
-     * You can get notified when specific events occur. Out of the box you can use 'mail' and 'slack'.
-     * For Slack you need to install laravel/slack-notification-channel.
-     * 
-     */
-
-    'notifications' => [
-
-        'channels' => ['mail'],
-
-        /*
-         * Here you can specify the notifiable to which the notifications should be sent. The default
-         * notifiable will use the variables specified in this config file.
-         */
-
-        'notifiable' => \MichaelNabil230\BlockIp\Notifications\Notifiable::class,
-
-        'mail' => [
-            'to' => 'your@example.com',
-
-            'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
-            ],
-        ],
-
-        'slack' => [
-            'webhook_url' => '',
-
-            /*
-             * If this is set to null the default channel of the webhook will be used.
-             */
-
-            'channel' => null,
-
-            'username' => null,
-
-            'icon' => null,
-
-        ],
-
-        'discord' => [
-            'webhook_url' => '',
-
-            /*
-             * If this is an empty string, the name field on the webhook will be used.
-             */
-
-            'username' => '',
-
-            /*
-             * If this is an empty string, the avatar on the webhook will be used.
-             */
-
-            'avatar_url' => '',
-        ],
-    ],
-
-    'cache' => [
-
-        /*
-         * By default all block ips are cached for 24 hours to speed up performance.
-         * When block ips are updated the cache is flushed automatically.
-         */
-
-        'expiration_time' => \DateInterval::createFromDateString('24 hours'),
-
-        /*
-         * The cache key used to store all block ips.
-         */
-
-        'key' => 'block-ips.cache.',
-
-        /*
-         * You may optionally indicate a specific cache driver to use for block ip
-         * caching using any of the `store` drivers listed in the cache.php config
-         * file. Using 'default' here means to use the `default` set in cache.php.
-         */
-
-        'store' => 'default',
-    ],
-
-    'webhook_cloud_flare' => [
-
-        /**
-         * Enable the webhook cloud flare work when user blocked.
-         */
-        'enable' => false,
-
-        /**
-         * Global API Key on the "My Profile > Api Tokens > API Keys" page.
-         */
-        'key' => env('CLOUDFLARE_KEY'),
-
-        /**
-         * Email address associated with your account.
-         */
-        'email' => env('CLOUDFLARE_EMAIL'),
-    ],
-];
-```
+The published configuration file allows you to customize various settings related to block IP functionality, notifications, caching, and more.
 
 ## Usage
 
-You can add them inside your `app/Providers/RouteServiceProvider.php` file.
+To configure rate limiting and use the package's functionality, you can add code to your `app/Providers/RouteServiceProvider.php` file. The following code demonstrates how to configure rate limiting and enable the package:
 
 ```php
 protected function configureRateLimiting()
@@ -164,63 +52,52 @@ protected function configureRateLimiting()
 }
 ```
 
-By default `maxAttempts` is `60` but if you want to change this number can make that.
+By default, the rate limiter is set to allow 60 requests per minute, but you can customize this value by passing it to the `rateLimiter()` method.
+
+The package provides a `BlockIpMiddleware` middleware that you can add to your routes in the `app/Http/Kernel.php` file. Make sure to uncomment the necessary line for the `throttle` middleware as well. Here's an example:
 
 ```php
-\MichaelNabil230\BlockIp\BlockIpRegistrar::rateLimiter(100);
-```
-
-## Package Middleware
-
-This package comes with `BlockIpMiddleware` middleware. You can add them inside your `app/Http/Kernel.php` file.
-
-```php
-protected $routeMiddleware = [
+protected $middlewareAliases = [
     // ...
     'block-ip' => \MichaelNabil230\BlockIp\Middleware\BlockIpMiddleware::class,
 ];
 ```
 
-Check if this line is uncommented in your `app/Http/Kernel.php` file.
-
-```php
-protected $routeMiddleware = [
-    // ...
-    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-];
-```
-
-Then you can protect your routes using middleware rules:
+To protect your routes using the block IP middleware and rate limiting, you can define them as follows:
 
 ```php
 Route::middleware(['block-ip', 'throttle:block-ip'])->group(function () {
-    //
+    // Your protected routes here
 });
 ```
 
-If you want to unblock all blocks for IPs can make that when running this command:
+If you want to unblock all IP addresses, you can use the following command:
 
 ```bash
 php artisan block-ip:unblock --all
 ```
 
-Or pluck for IPs
+You can also unblock multiple IP addresses by providing them as a comma-separated list:
 
 ```bash
 php artisan block-ip:unblock --ips=127.0.0.1,127.0.0.2
 ```
 
-If you want to add new IPs for the block can make that when running this command:
+To block new IP addresses, you can use the following command:
 
 ```bash
-php artisan block-ip:block 127.0.0.1,127.0.0.2
+php artisan block-ip:block 127.0.0.1 127.0.0.2
 ```
 
 ## Support
 
+If you find this package useful, you can show your support by contributing financially:
+
 [![](.assets/ko-fi.png)](https://ko-fi.com/michaelnabil230)[![](.assets/buymeacoffee.png)](https://www.buymeacoffee.com/michaelnabil230)[![](.assets/paypal.png)](https://www.paypal.com/paypalme/MichaelNabil23)
 
 ## Testing
+
+You can run the package's tests using the following command:
 
 ```bash
 composer test
