@@ -17,31 +17,32 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/contracts": "^9.0",
-        "spatie/laravel-package-tools": "^1.13.0"
+        "spatie/laravel-package-tools": "^1.15.0",
+        "illuminate/contracts": "^10.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.0",
-        "laravel/slack-notification-channel": "^2.4",
-        "nunomaduro/collision": "^6.0",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.1",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^9.5"
+        "laravel/pint": "^1.10",
+        "laravel/slack-notification-channel": "^2.5",
+        "nunomaduro/collision": "^7",
+        "nunomaduro/larastan": "^2.6.0",
+        "orchestra/testbench": "^8.5.5",
+        "pestphp/pest": "^2.6.2",
+        "pestphp/pest-plugin-arch": "^2.2",
+        "pestphp/pest-plugin-laravel": "^2.0.0",
+        "phpstan/extension-installer": "^1.3.1",
+        "phpstan/phpstan-deprecation-rules": "^1.1.3",
+        "phpstan/phpstan-phpunit": "^1.3.13",
+        "phpunit/phpunit": "^10.2"
     },
     "autoload": {
         "psr-4": {
-            "MichaelNabil230\\BlockIp\\": "src",
-            "MichaelNabil230\\BlockIp\\Database\\Factories\\": "database/factories"
+            "MichaelNabil230\\BlockIp\\": "src/",
+            "MichaelNabil230\\BlockIp\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MichaelNabil230\\BlockIp\\Tests\\": "tests"
+            "MichaelNabil230\\BlockIp\\Tests\\": "tests/"
         }
     },
     "scripts": {
